@@ -168,7 +168,11 @@ public class Registrar extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(0, 0, 0));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Generar Fecha");
+        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 255, 255)));
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
@@ -212,17 +216,18 @@ public class Registrar extends javax.swing.JFrame {
                         .addContainerGap(112, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextFieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabelNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabelContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabelCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabelUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextFieldFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(26, 26, 26)
-                                .addComponent(jButton1)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jTextFieldFecha)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jTextFieldContraseña, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -250,9 +255,9 @@ public class Registrar extends javax.swing.JFrame {
                 .addComponent(jLabelUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextFieldContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -288,13 +293,13 @@ public class Registrar extends javax.swing.JFrame {
         String nombre = jTextFieldNombre.getText();
         String usuario = jTextFieldUsername.getText().trim();
         String contraseña = jTextFieldContraseña.getText().trim();
-        String fechas = jTextFieldFecha.getText();
+        String fecha = jTextFieldFecha.getText();
         String edad = jTextFieldEdad.getText();
         int gener = jComboBoxGenero.getSelectedIndex();
         String genero = jComboBoxGenero.getItemAt(gener);
         UsuarioInfo.verificar_cuenta(usuario);
 
-        if (nombre.isEmpty() || usuario.isEmpty() || contraseña.isEmpty() || fechas.isEmpty() || edad.isEmpty()) {
+        if (nombre.isEmpty() || usuario.isEmpty() || contraseña.isEmpty() || fecha.isEmpty() || edad.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Por favor llene todos los campos solicitados");
         } else {
 
@@ -316,7 +321,7 @@ public class Registrar extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Debes ser mayor de 18 años para registrarte.\nO ingresa una edad válida");
                     
                 }else {
-                    UsuarioInfo cuenta = new UsuarioInfo(usuario, nombre, edad, fechas, contraseña, genero);
+                    UsuarioInfo cuenta = new UsuarioInfo(usuario, nombre, edad, fecha, contraseña, genero);
                     UsuarioInfo.agregarCuenta(cuenta);
                     user_actual.setUsuarioActual(cuenta);
 
@@ -328,7 +333,7 @@ public class Registrar extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "\nBienvenido\nCuenta registrada exitosamente: " + "\n"
                             + "Nombre: " + nombre + "\n"
                             + "Usuario: " + usuario + "\n"
-                            + "Fecha: " + fechas + "\n"
+                            + "Fecha: " + fecha + "\n"
                             + "Edad: " + edad + "\n"
                             + "contra: " + contraseña
                             + "\nGénero: " + genero);

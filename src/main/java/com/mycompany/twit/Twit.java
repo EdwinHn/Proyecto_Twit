@@ -29,7 +29,7 @@ public class Twit {
 
     @Override
     public String toString() {
-        return usuario + " escribió: \"" + contenido + "\" el [" + fecha + "]";
+        return usuario + " escribió: \n" + contenido + "\n      el [" + fecha + "]";
     }
 /*    private static String[] twits = new String[100];
     private static int contador1 = 0;

@@ -32,13 +32,6 @@ public class Inicio extends javax.swing.JFrame {
         ImageIcon scaledIconTimeline = new ImageIcon(imgScaleTimeline);
         btn_Timeline.setIcon(scaledIconTimeline);
 
-        //Mandar Tweet
-        ImageIcon iconMandar_Tweet = new ImageIcon("Mandar_Tweet.png");
-        Image imgMandar_Tweet = iconMandar_Tweet.getImage();
-        Image imgScaleMandar_Tweet = imgMandar_Tweet.getScaledInstance(btn_Interacciones.getWidth(), btn_Interacciones.getHeight(), Image.SCALE_SMOOTH);
-        ImageIcon scaledIconMandar_Tweet = new ImageIcon(imgScaleMandar_Tweet);
-        btn_MandarTweet.setIcon(scaledIconMandar_Tweet);
-
         //Interacciones
         ImageIcon iconInteracciones = new ImageIcon("Interacciones.png");
         Image imgInteracciones = iconInteracciones.getImage();
@@ -91,7 +84,6 @@ public class Inicio extends javax.swing.JFrame {
         btn_BuscarHashtag = new javax.swing.JLabel();
         btn_CerrarSesion = new javax.swing.JLabel();
         jInternalFrame = new javax.swing.JInternalFrame();
-        btn_MandarTweet = new javax.swing.JLabel();
 
         jMenu1.setText("jMenu1");
 
@@ -121,7 +113,7 @@ public class Inicio extends javax.swing.JFrame {
                 btn_TimelineMouseClicked(evt);
             }
         });
-        getContentPane().add(btn_Timeline, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 175, 50));
+        getContentPane().add(btn_Timeline, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, 175, 50));
 
         btn_Interacciones.setText("Interacciones");
         btn_Interacciones.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -130,7 +122,7 @@ public class Inicio extends javax.swing.JFrame {
                 btn_InteraccionesMouseClicked(evt);
             }
         });
-        getContentPane().add(btn_Interacciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 175, 50));
+        getContentPane().add(btn_Interacciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 360, 175, 50));
 
         btn_EditarPerfil.setText("Editar Perfil");
         btn_EditarPerfil.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -139,7 +131,7 @@ public class Inicio extends javax.swing.JFrame {
                 btn_EditarPerfilMouseClicked(evt);
             }
         });
-        getContentPane().add(btn_EditarPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 460, 175, 50));
+        getContentPane().add(btn_EditarPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 440, 175, 50));
 
         btn_BuscarHashtag.setText("Buscar Hashtag");
         btn_BuscarHashtag.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -148,7 +140,7 @@ public class Inicio extends javax.swing.JFrame {
                 btn_BuscarHashtagMouseClicked(evt);
             }
         });
-        getContentPane().add(btn_BuscarHashtag, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 540, 175, 50));
+        getContentPane().add(btn_BuscarHashtag, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 520, 175, 50));
 
         btn_CerrarSesion.setText("Cerrar Sesión");
         btn_CerrarSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -164,15 +156,6 @@ public class Inicio extends javax.swing.JFrame {
         jInternalFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         jInternalFrame.setVisible(true);
         getContentPane().add(jInternalFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 740, 660));
-
-        btn_MandarTweet.setText("Mandar Tweet");
-        btn_MandarTweet.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_MandarTweet.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_MandarTweetMouseClicked(evt);
-            }
-        });
-        getContentPane().add(btn_MandarTweet, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 175, 50));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -217,20 +200,12 @@ public class Inicio extends javax.swing.JFrame {
         interBuscarHashtag.setVisible(true);
     }//GEN-LAST:event_btn_BuscarHashtagMouseClicked
 
-    private void btn_MandarTweetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_MandarTweetMouseClicked
-        InternalMandarTweet interMandarTweet = new InternalMandarTweet();
-        jInternalFrame.getContentPane().removeAll();
-        jInternalFrame.add(interMandarTweet);
-        interMandarTweet.setVisible(true);
-    }//GEN-LAST:event_btn_MandarTweetMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LabelLogo;
     private javax.swing.JLabel btn_BuscarHashtag;
     private javax.swing.JLabel btn_CerrarSesion;
     private javax.swing.JLabel btn_EditarPerfil;
     private javax.swing.JLabel btn_Interacciones;
-    private javax.swing.JLabel btn_MandarTweet;
     private javax.swing.JLabel btn_Timeline;
     private javax.swing.JInternalFrame jInternalFrame;
     private javax.swing.JLabel jLabelTwit;

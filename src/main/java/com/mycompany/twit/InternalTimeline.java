@@ -1,5 +1,7 @@
 package com.mycompany.twit;
 
+import javax.swing.JOptionPane;
+
 public class InternalTimeline extends javax.swing.JInternalFrame {
 
     private UsuarioInfo verTwits;
@@ -7,21 +9,21 @@ public class InternalTimeline extends javax.swing.JInternalFrame {
 
     public InternalTimeline() {
         initComponents();
-        
-        verTwits = new UsuarioInfo();
-        twitsUsuario = new Twit();
-        
-        String[] twits = twitsUsuario.obtenerTwits(); 
-        int contador = twitsUsuario.obtenerContadorTwits(); 
-        StringBuilder textosConcatenados = new StringBuilder();
+        mostrarTimeline();
 
-        for (int i = 0; i < contador; i++) {
-            textosConcatenados.append(twits[i]).append("\n");
-        }
-        
-        jTextAreaTimeline.setText(textosConcatenados.toString());
     }
-
+    
+    private void mostrarTimeline() {
+        UsuarioInfo usuarioActual = user_actual.getUsuarioActual();
+        String[] timeline = usuarioActual.obtenerTimeline();
+        jTextAreaTimeline.setText("");
+        if (timeline.length == 0) {
+        jTextAreaTimeline.setText("No hay nada que ver.\nSe el primero en twitear algo.");
+        }
+        for (String tweet : timeline) {
+            jTextAreaTimeline.append(tweet + "\n\n");
+        }
+    }
     
 
     /**
@@ -35,9 +37,11 @@ public class InternalTimeline extends javax.swing.JInternalFrame {
 
         jLabelTimeline = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaTimeline = new javax.swing.JTextArea();
+        jTextAreaTweet = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextAreaTimeline1 = new javax.swing.JTextArea();
+        jTextAreaTimeline = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
+        btn_Twitear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 0, 0));
         setBorder(null);
@@ -50,6 +54,17 @@ public class InternalTimeline extends javax.swing.JInternalFrame {
         jLabelTimeline.setText("Timeline");
         getContentPane().add(jLabelTimeline, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 10, 280, 70));
 
+        jTextAreaTweet.setBackground(new java.awt.Color(0, 0, 0));
+        jTextAreaTweet.setColumns(20);
+        jTextAreaTweet.setFont(new java.awt.Font("Helvetica Neue", 0, 22)); // NOI18N
+        jTextAreaTweet.setForeground(new java.awt.Color(255, 255, 255));
+        jTextAreaTweet.setLineWrap(true);
+        jTextAreaTweet.setRows(5);
+        jTextAreaTweet.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 255, 255)));
+        jScrollPane1.setViewportView(jTextAreaTweet);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 680, 200));
+
         jTextAreaTimeline.setEditable(false);
         jTextAreaTimeline.setBackground(new java.awt.Color(0, 0, 0));
         jTextAreaTimeline.setColumns(20);
@@ -58,31 +73,47 @@ public class InternalTimeline extends javax.swing.JInternalFrame {
         jTextAreaTimeline.setLineWrap(true);
         jTextAreaTimeline.setRows(5);
         jTextAreaTimeline.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 255, 255)));
-        jScrollPane1.setViewportView(jTextAreaTimeline);
-
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 680, 200));
-
-        jTextAreaTimeline1.setEditable(false);
-        jTextAreaTimeline1.setBackground(new java.awt.Color(0, 0, 0));
-        jTextAreaTimeline1.setColumns(20);
-        jTextAreaTimeline1.setFont(new java.awt.Font("Helvetica Neue", 0, 22)); // NOI18N
-        jTextAreaTimeline1.setForeground(new java.awt.Color(255, 255, 255));
-        jTextAreaTimeline1.setLineWrap(true);
-        jTextAreaTimeline1.setRows(5);
-        jTextAreaTimeline1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 255, 255)));
-        jScrollPane2.setViewportView(jTextAreaTimeline1);
+        jScrollPane2.setViewportView(jTextAreaTimeline);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 680, 260));
+
+        jLabel1.setText("Manda un Tweet:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 170, -1));
+
+        btn_Twitear.setBackground(new java.awt.Color(0, 0, 0));
+        btn_Twitear.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btn_Twitear.setForeground(new java.awt.Color(255, 255, 255));
+        btn_Twitear.setText("Mandar");
+        btn_Twitear.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 255, 255)));
+        btn_Twitear.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_TwitearMouseClicked(evt);
+            }
+        });
+        getContentPane().add(btn_Twitear, new org.netbeans.lib.awtextra.AbsoluteConstraints(594, 313, 100, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_TwitearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_TwitearMouseClicked
+        String contenido = jTextAreaTweet.getText();
+        if (contenido.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El tweet no puede estar vacío.");
+        } else {
+            UsuarioInfo usuarioActual = user_actual.getUsuarioActual();
+            usuarioActual.mandarTweet(contenido);
+            jTextAreaTweet.setText("");
+            mostrarTimeline();
+        }
+    }//GEN-LAST:event_btn_TwitearMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_Twitear;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelTimeline;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextAreaTimeline;
-    private javax.swing.JTextArea jTextAreaTimeline1;
+    private javax.swing.JTextArea jTextAreaTweet;
     // End of variables declaration//GEN-END:variables
 }

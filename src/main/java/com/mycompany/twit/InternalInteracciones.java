@@ -6,7 +6,29 @@ public class InternalInteracciones extends javax.swing.JInternalFrame {
 
     public InternalInteracciones() {
         initComponents();
-        
+        UsuarioInfo usuarioActual = user_actual.getUsuarioActual();
+
+        if (usuarioActual != null) {
+            // Obtener el arreglo de menciones del usuario actual
+            Twit[] menciones = usuarioActual.obtenerMenciones();
+
+            // Limpiar el área de texto antes de mostrar nuevas menciones
+            jTextAreaInteracciones.setText("");
+
+            // Si no hay menciones, mostrar un mensaje
+            if (menciones.length == 0) {
+                jTextAreaInteracciones.append("No tienes menciones.\n");
+            } else {
+                // Mostrar las menciones en el área de texto
+                for (Twit mencion : menciones) {
+                    if (mencion != null) {
+                        jTextAreaInteracciones.append(mencion.toString() + "\n");
+                    }
+                }
+            }
+        } else {
+            jTextAreaInteracciones.setText("No hay un usuario logueado.\n");
+        }
     }
 
     /**
