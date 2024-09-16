@@ -81,25 +81,41 @@ public class InternalDesActivarCuenta extends javax.swing.JInternalFrame {
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         UsuarioInfo usuarioActual = user_actual.getUsuarioActual();
 
-    if (usuarioActual == null) {
-        JOptionPane.showMessageDialog(null, "No hay un usuario logueado.");
-        return;
-    }
-
-    if (usuarioActual.isCuentaActiva()) {
-        int opcion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que deseas desactivar tu cuenta?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (opcion == JOptionPane.YES_OPTION) {
-            usuarioActual.desactivarCuenta();
-            JOptionPane.showMessageDialog(null, "Tu cuenta ha sido desactivada.");
-            // Actualiza la interfaz para reflejar los cambios
+        if (usuarioActual == null) {
+            JOptionPane.showMessageDialog(null, "No hay un usuario logueado.");
+            return;
         }
-    } else {
-        usuarioActual.activarCuenta();
-        JOptionPane.showMessageDialog(null, "Tu cuenta ha sido activada.");
-        // Actualiza la interfaz para reflejar los cambios
-    }
+
+        if (usuarioActual.isCuentaActiva()) {
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que deseas desactivar tu cuenta?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (opcion == JOptionPane.YES_OPTION) {
+                usuarioActual.desactivarCuenta();
+                actualizarEstadoCuenta();
+
+            }
+        } else {
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que deseas activar tu cuenta?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (opcion == JOptionPane.YES_OPTION) {
+                usuarioActual.activarCuenta();
+                actualizarEstadoCuenta();
+
+            }
+        }
     }//GEN-LAST:event_jButton1MouseClicked
 
+    private void actualizarEstadoCuenta() {
+        UsuarioInfo usuarioActual = user_actual.getUsuarioActual();
+
+        if (usuarioActual != null) {
+            if (usuarioActual.isCuentaActiva()) {
+                JOptionPane.showMessageDialog(null, "Tu cuenta está activa.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Tu cuenta está desactivada.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay un usuario logueado.");
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

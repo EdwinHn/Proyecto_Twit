@@ -66,8 +66,8 @@ public class InternalBuscarPersona extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBuscarMouseClicked
-        String palabraUser = jTextFieldBuscarPersona.getText();
-        listmodel.clear();  // Limpiar los resultados anteriores
+        String palabraUser = jTextFieldBuscarPersona.getText().toLowerCase();
+        listmodel.clear(); 
 
         
         String[] resultados = UsuarioInfo.buscarUsuariosConSeguimiento(palabraUser, user_actual.getUsuarioActual());

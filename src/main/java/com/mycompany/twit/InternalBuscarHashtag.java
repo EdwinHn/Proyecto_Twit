@@ -9,8 +9,6 @@ public class InternalBuscarHashtag extends javax.swing.JInternalFrame {
 
     }
 
-    
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -100,7 +98,7 @@ public class InternalBuscarHashtag extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBuscarMouseClicked
-         String hashtag = jTextFieldBuscarHashtag.getText().trim();
+        String hashtag = jTextFieldBuscarHashtag.getText().trim().toLowerCase();
         if (hashtag.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El hashtag no puede estar vacío.");
             return;
@@ -117,34 +115,35 @@ public class InternalBuscarHashtag extends javax.swing.JInternalFrame {
             for (String tweet : tweetsConHashtag) {
                 HashtagResultados.append(tweet + "\n\n");
             }
-        } 
+        }
     }//GEN-LAST:event_btnBuscarMouseClicked
 
     private String[] obtenerTweetsConHashtag(String hashtag) {
-        final int MAX_TWEETS = 100; // Ajusta el tamaño según sea necesario
-        String[] tweetsConHashtag = new String[MAX_TWEETS];
-        int index = 0;
+        final int MAX_TWEETS = 1000;
+    String[] resultados = new String[MAX_TWEETS];
+    int contadorResultados = 0;
 
-        // Recorre todos los usuarios para buscar tweets con el hashtag
-        int contador = UsuarioInfo.getContador();
-        for (int i = 0; i < contador; i++) {
-            UsuarioInfo usuario = UsuarioInfo.getCuenta(i);
-            String[] timeline = usuario.obtenerTimeline();
-            for (String tweet : timeline) {
-                if (tweet.contains("#" + hashtag)) {
-                    if (index < MAX_TWEETS) {
-                        tweetsConHashtag[index++] = tweet;
+
+    for (int i = 0; i < UsuarioInfo.getContador(); i++) {
+        UsuarioInfo usuario = UsuarioInfo.getCuenta(i);
+        if (usuario.isCuentaActiva()) { 
+            Twit[] twits = usuario.obtenerTwits();
+            for (Twit twit : twits) {
+                if (twit.getContenido().contains("#" + hashtag)) {
+                    if (contadorResultados < MAX_TWEETS) {
+                        resultados[contadorResultados] = twit.toString();
+                        contadorResultados++;
                     }
                 }
             }
         }
-
-        // Redimensionar el arreglo a la cantidad de tweets encontrados
-        String[] resultadoFinal = new String[index];
-        System.arraycopy(tweetsConHashtag, 0, resultadoFinal, 0, index);
-
-        return resultadoFinal;
     }
+
+    String[] tweetsFiltrados = new String[contadorResultados];
+    System.arraycopy(resultados, 0, tweetsFiltrados, 0, contadorResultados);
+
+    return tweetsFiltrados;
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea HashtagResultados;

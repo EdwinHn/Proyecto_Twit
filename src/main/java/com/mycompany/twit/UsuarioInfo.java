@@ -13,12 +13,13 @@ class UsuarioInfo {
     private String contraseña;
     private String genero;
     private boolean cuenta_activada;
+    
     private int seguidores = 0;
     private static final int MAX_HASHTAGS = 100;
     private Twit[] hashtags = new Twit[MAX_HASHTAGS];
     private int contadorHashtags = 0;
 
-    private Twit[] twits = new Twit[100];
+    private Twit[] twits = new Twit[100]; // Arreglo para almacenar tweets
     private int contadorTwits = 0;
     private Twit[] menciones = new Twit[100];
     private int contadorMenciones = 0;
@@ -26,7 +27,7 @@ class UsuarioInfo {
     private static UsuarioInfo[] cuentas = new UsuarioInfo[100];
     private static int contador = 0;
 
-    private seguidores seguidos;
+    private seguidores seguidos; // Clase que maneja los usuarios seguidos
 
     public UsuarioInfo(String usuario, String nombre, String edad, String fecha, String contraseña, String genero) {
         this.usuario = usuario;
@@ -34,26 +35,28 @@ class UsuarioInfo {
         this.contraseña = contraseña;
         this.genero = genero;
         this.nombre = nombre;
-        this.seguidos = new seguidores();
+        this.seguidos = new seguidores(); // Inicialización de la lista de seguidos
         this.cuenta_activada = true;
-        this.fecha = fecha;
+        this.fecha=fecha;
         this.twits = new Twit[100];
     }
-    
+    // Método para desactivar cuenta
+
     public void desactivarCuenta() {
         cuenta_activada = false;
     }
 
+    // Método para activar cuenta
     public void activarCuenta() {
         cuenta_activada = true;
     }
 
-    
+    // Método para verificar si la cuenta está activa
     public boolean isCuentaActiva() {
         return cuenta_activada;
     }
 
-    
+    // Métodos de acceso a los atributos
     public String getusuario() {
         return usuario;
     }
@@ -98,23 +101,23 @@ class UsuarioInfo {
 
     public void seguirUsuario(UsuarioInfo usuarioASeguir) {
         if (!this.equals(usuarioASeguir) && !seguidos.loSigo(usuarioASeguir)) {
-            seguidos.agregar(usuarioASeguir);
-            usuarioASeguir.incrementarSeguidores();
+            seguidos.agregar(usuarioASeguir); // Agregar a la lista de seguidos del usuario actual
+            usuarioASeguir.incrementarSeguidores(); // Incrementar seguidores solo del usuario seguido
         }
-
+        // Llamar al método que actualiza la interfaz
 
     }
 
     public void dejarDeSeguir(UsuarioInfo usuarioADejarDeSeguir) {
         if (seguidos.loSigo(usuarioADejarDeSeguir)) {
-            seguidos.eliminar(usuarioADejarDeSeguir);
-            usuarioADejarDeSeguir.decrementarSeguidores();
+            seguidos.eliminar(usuarioADejarDeSeguir); // Eliminar de la lista de seguidos del usuario actual
+            usuarioADejarDeSeguir.decrementarSeguidores(); // Decrementar seguidores solo del usuario seguido
         }
-        
+        // Llamar al método que actualiza la interfaz
 
     }
 
-    
+    // Métodos estáticos para el manejo de cuentas
     public static UsuarioInfo obtenerUsuarioPerfil(String nombreUsuario) {
         for (int i = 0; i < contador; i++) {
             UsuarioInfo usuario = cuentas[i];
@@ -122,15 +125,14 @@ class UsuarioInfo {
                 return usuario;
             }
         }
-        return null;
-        
+        return null; // Usuario no encontrado
     }
 
     public static UsuarioInfo getCuenta(int index) {
         if (index >= 0 && index < contador) {
             return cuentas[index];
         } else {
-            return null; 
+            return null; // Índice fuera de rango
         }
     }
 
@@ -151,7 +153,7 @@ class UsuarioInfo {
                 return true;
             }
         }
-        return false;
+        return false; // Usuario no encontrado
     }
 
     public static void buscarUsuarios(String texto) {
@@ -169,21 +171,27 @@ class UsuarioInfo {
     }
 
     public static String[] buscarUsuariosConSeguimiento(String texto, UsuarioInfo usuarioActual) {
+        // Contador para el número de resultados encontrados
         int contadorResultados = 0;
 
+        // Arreglo fijo para almacenar los resultados (puedes ajustar el tamaño si es necesario)
         String[] resultadosTemp = new String[getContador()];
 
         for (int i = 0; i < getContador(); i++) {
             UsuarioInfo cuenta = getCuenta(i);
 
+            // Verifica si el nombre del usuario contiene el texto buscado y si la cuenta está activa
             if (cuenta.getusuario().contains(texto) && cuenta.isCuentaActiva()) {
+                // Verifica si el usuario actual sigue a esta cuenta
                 String estado = usuarioActual.getSeguidos().loSigo(cuenta) ? "Sigues" : "No sigues";
 
+                // Añadir el resultado al arreglo temporal
                 resultadosTemp[contadorResultados] = cuenta.getusuario() + " - " + estado;
                 contadorResultados++;
             }
         }
 
+        // Crear un arreglo final con el tamaño adecuado
         String[] resultados = new String[contadorResultados];
         System.arraycopy(resultadosTemp, 0, resultados, 0, contadorResultados);
 
@@ -191,6 +199,11 @@ class UsuarioInfo {
     }
 
     public void mandarTweet(String contenido) {
+        if (!isCuentaActiva()) {
+            System.out.println("No puedes enviar tweets con una cuenta desactivada.");
+            return;
+        }
+
         if (contenido.length() > 140) {
             System.out.println("El tweet no puede exceder los 140 caracteres.");
             return;
@@ -201,8 +214,10 @@ class UsuarioInfo {
             twits[contadorTwits] = nuevoTwit;
             contadorTwits++;
 
+            // Procesar mención y hashtags
             procesarMencionYHashtags(nuevoTwit);
 
+            // Notificar a los seguidores
             notificarSeguidores(nuevoTwit);
 
             System.out.println("Tweet enviado exitosamente.");
@@ -214,7 +229,7 @@ class UsuarioInfo {
     private void notificarSeguidores(Twit twit) {
         UsuarioInfo[] seguidoresArray = seguidos.obtenerSeguidos();
         for (int i = 0; i < seguidoresArray.length; i++) {
-            if (seguidoresArray[i] != null) {
+            if (seguidoresArray[i] != null && seguidoresArray[i].isCuentaActiva()) {
                 seguidoresArray[i].agregarTwit(twit);
             }
         }
@@ -238,19 +253,21 @@ class UsuarioInfo {
     }
 
     public String[] obtenerTimeline() {
-        Set<Twit> todosTwitsSet = new LinkedHashSet<>();
-        todosTwitsSet.addAll(Arrays.asList(obtenerTwits())); 
+        Set<Twit> todosTwitsSet = new LinkedHashSet<>(); // Usar LinkedHashSet para evitar duplicados y mantener el orden
+        todosTwitsSet.addAll(Arrays.asList(obtenerTwits())); // Añadir los tweets propios
 
         UsuarioInfo[] seguidoresArray = seguidos.obtenerSeguidos();
         for (int i = 0; i < seguidoresArray.length; i++) {
-            if (seguidoresArray[i] != null && !seguidoresArray[i].getusuario().equals(this.getusuario())) {
+            if (seguidoresArray[i] != null && seguidoresArray[i].isCuentaActiva() && !seguidoresArray[i].getusuario().equals(this.getusuario())) {
                 todosTwitsSet.addAll(Arrays.asList(seguidoresArray[i].obtenerTwits()));
             }
         }
 
+        // Convertir el set a un array y ordenar del más reciente al más viejo
         Twit[] todosTwits = todosTwitsSet.toArray(new Twit[0]);
-        Arrays.sort(todosTwits, (t1, t2) -> t2.getFecha().compareTo(t1.getFecha()));
+        Arrays.sort(todosTwits, (t1, t2) -> t2.getFecha().compareTo(t1.getFecha())); // Ordenar en orden descendente
 
+        // Convertir a arreglo de String para mostrar
         String[] timeline = new String[todosTwits.length];
         for (int i = 0; i < todosTwits.length; i++) {
             timeline[i] = todosTwits[i].toString();
@@ -260,32 +277,28 @@ class UsuarioInfo {
     }
 
     public String[] obtenerInteracciones() {
-        int totalTwits = UsuarioInfo.getContador() * 100;
+        int totalTwits = UsuarioInfo.getContador() * 100; // Estimación alta
 
         Twit[] interacciones = new Twit[totalTwits];
         int index = 0;
 
+        // Buscar en todos los tweets de todos los usuarios
         for (int i = 0; i < UsuarioInfo.getContador(); i++) {
             UsuarioInfo usuario = UsuarioInfo.getCuenta(i);
-            Twit[] twitsUsuario = usuario.obtenerTwits();
-            for (Twit twit : twitsUsuario) {
-                if (twit.getContenido().contains("@" + this.usuario)) {
-                    interacciones[index++] = twit;
+            if (usuario.isCuentaActiva()) { // Solo considerar usuarios activos
+                Twit[] twitsUsuario = usuario.obtenerTwits();
+                for (Twit twit : twitsUsuario) {
+                    if (twit.getContenido().contains("@" + this.usuario)) {
+                        interacciones[index++] = twit;
+                    }
                 }
             }
         }
 
+        // Ordenar por fecha (más reciente primero)
+        Arrays.sort(interacciones, 0, index, (t1, t2) -> t2.getFecha().compareTo(t1.getFecha()));
 
-        for (int i = 0; i < index - 1; i++) {
-            for (int j = i + 1; j < index; j++) {
-                if (interacciones[i].getFecha().compareTo(interacciones[j].getFecha()) < 0) {
-                    Twit temp = interacciones[i];
-                    interacciones[i] = interacciones[j];
-                    interacciones[j] = temp;
-                }
-            }
-        }
-
+        // Convertir a arreglo de String para mostrar
         String[] interaccionesStr = new String[index];
         for (int i = 0; i < index; i++) {
             interaccionesStr[i] = interacciones[i].toString();
@@ -301,60 +314,103 @@ class UsuarioInfo {
         }
     }
 
-    // Método para obtener las menciones
-    public Twit[] obtenerMenciones() {
-        Twit[] mencionesActivas = new Twit[contadorMenciones];
-        System.arraycopy(menciones, 0, mencionesActivas, 0, contadorMenciones);
-        return mencionesActivas;
+   public Twit[] obtenerMenciones() {
+    if (!isCuentaActiva()) {
+
+        return new Twit[0];
     }
+    
+
+    Twit[] mencionesActivas = new Twit[contadorMenciones];
+    System.arraycopy(menciones, 0, mencionesActivas, 0, contadorMenciones);
+    return mencionesActivas;
+}
 
     private void procesarMencionYHashtags(Twit twit) {
-    String contenido = twit.getContenido();
-    
-    // Procesar menciones
-    if (contenido.contains("@")) {
-        String[] palabras = contenido.split(" ");
-        for (String palabra : palabras) {
-            if (palabra.startsWith("@")) {
-                String mencionado = palabra.substring(1); // Quitar el "@"
-                UsuarioInfo mencionadoUsuario = Gestion_Cuenta.obtenerInformacion(mencionado);
-                if (mencionadoUsuario != null) {
-                    mencionadoUsuario.agregarMencion(twit);
-                    System.out.println("El usuario @" + mencionado + " ha sido mencionado.");
+        String contenido = twit.getContenido();
+
+        if (!isCuentaActiva()) {
+            System.out.println("No se procesarán menciones ni hashtags porque la cuenta está desactivada.");
+            return;
+        }
+
+
+        if (contenido.contains("@")) {
+            String[] palabras = contenido.split(" ");
+            for (String palabra : palabras) {
+                if (palabra.startsWith("@")) {
+                    String mencionado = palabra.substring(1); // Quitar el "@"
+                    
+
+                    UsuarioInfo mencionadoUsuario = Gestion_Cuenta.obtenerInformacion(mencionado);
+                    
+                    if (mencionadoUsuario != null && mencionadoUsuario.isCuentaActiva()) {
+                        mencionadoUsuario.agregarMencion(twit);
+                        System.out.println("El usuario @" + mencionado + " ha sido mencionado.");
+                    } else {
+                        System.out.println("El usuario @" + mencionado + " no existe o tiene su cuenta desactivada.");
+                    }
+                }
+            }
+        }
+
+
+        if (contenido.contains("#")) {
+            String[] palabras = contenido.split(" ");
+            for (String palabra : palabras) {
+                if (palabra.startsWith("#")) {
+                    if (contadorHashtags < hashtags.length) {
+                        hashtags[contadorHashtags] = twit;
+                        contadorHashtags++;
+                        System.out.println("El tweet contiene el hashtag " + palabra);
+                    }
                 }
             }
         }
     }
 
-    // Procesar hashtags
-    if (contenido.contains("#")) {
-        String[] palabras = contenido.split(" ");
-        for (String palabra : palabras) {
-            if (palabra.startsWith("#")) {
-                if (contadorHashtags < hashtags.length) {
-                    hashtags[contadorHashtags] = twit;
-                    contadorHashtags++;
-                    System.out.println("El tweet contiene el hashtag " + palabra);
-                }
-            }
-        }
-    }
-}
     public Twit[] obtenerTweetsPorHashtag(String hashtag) {
-    Twit[] resultados = new Twit[MAX_HASHTAGS];
-    int contadorResultados = 0;
+        Twit[] resultados = new Twit[MAX_HASHTAGS];
+        int contadorResultados = 0;
 
-    for (int i = 0; i < contadorHashtags; i++) {
-        if (hashtags[i].getContenido().contains(hashtag)) {
-            resultados[contadorResultados] = hashtags[i];
-            contadorResultados++;
+        for (int i = 0; i < contadorHashtags; i++) {
+            if (hashtags[i].getContenido().contains(hashtag)) {
+                resultados[contadorResultados] = hashtags[i];
+                contadorResultados++;
+            }
         }
+
+
+        Twit[] tweetsFiltrados = new Twit[contadorResultados];
+        System.arraycopy(resultados, 0, tweetsFiltrados, 0, contadorResultados);
+
+        return tweetsFiltrados;
     }
 
-    // Convertir a un arreglo de tamaño exacto
-    Twit[] tweetsFiltrados = new Twit[contadorResultados];
-    System.arraycopy(resultados, 0, tweetsFiltrados, 0, contadorResultados);
+    public Twit[] obtenerHashtags() {
+        if (!isCuentaActiva()) {
+            System.out.println("La cuenta está desactivada. No se mostrarán hashtags.");
+            return new Twit[0]; // Devuelve un arreglo vacío si la cuenta está desactivada
+        }
 
-    return tweetsFiltrados;
-}
+        Twit[] hashtagsActivos = new Twit[contadorHashtags];
+        System.arraycopy(hashtags, 0, hashtagsActivos, 0, contadorHashtags);
+        return hashtagsActivos;
+    }
+
+    public Twit[] getHashtagsVisibles() {
+        if (!isCuentaActiva()) {
+            return new Twit[0];
+        }
+        return Arrays.copyOf(hashtags, contadorHashtags);
+    }
+
+    public Twit[] getMencionesVisibles() {
+        if (!isCuentaActiva()) {
+            return new Twit[0];
+        }
+        return Arrays.copyOf(menciones, contadorMenciones);
+    }
+
+    
 }
